@@ -1,10 +1,21 @@
 #!/usr/bin/env python3
 
+"""
+    This moduel contains the utils for the poker game.
+    These include:
+        `Rank`: Enum of the different ranks of the cards.
+        `Suit`: Enum for the suits of the cards.
+        `Card`: Class for the cards.
+        `Deck`: Class for the deck of cards.
+"""
+
 import random
 from enum import IntEnum
-import Numba
 
 class Suit(IntEnum):
+    """
+        Enum for the suits of the cards.
+    """
     Clubs = 0
     Diamonds = 1
     Spades = 2
@@ -14,6 +25,9 @@ class Suit(IntEnum):
         return self.name
 
 class Rank(IntEnum):
+    """
+        Enum for the ranks of the cards.
+    """
     ACE = 1
     TWO = 2
     THREE = 3
@@ -32,9 +46,26 @@ class Rank(IntEnum):
         return self.name
 
 class Card:
+    """
+        A card object.\n
+        Attributes:\n
+            rank: The rank of the card.\n
+            suit: The suit of the card.\n
+    """
     
-    def __init__(self, number: int, suit: int):
-        self.rank = Rank(number)
+    def __init__(self, rank: Rank, suit: int):
+        """
+            ```text
+            Initializes the card.
+            Parameters:
+                rank (int or Rank enum): The rank of the card.
+                    NOTE: Rank integers must be between 1 <= rank <= 13.
+                suit (int or Suit enum): The suit of the card.
+                    NOTE: Suit integers must be between 0 <= suit <= 3.
+            ```
+        """
+        # in case constructore is called with integers, not enums.
+        self.rank = Rank(Rank)
         self.suit = Suit(suit)
 
     def __str__(self):
@@ -43,31 +74,31 @@ class Card:
 class Deck:
 
     def __init__(self):
-        self.cards = []
+        self.__cards = []
         for rank in Rank:
             for suit in Suit:
                 card = Card(rank, suit)
-                self.cards.append(card)
+                self.__cards.append(card)
                 
     def __str__(self):
-        return "\n".join([str(card) for card in self.cards])
+        return "\n".join([str(card) for card in self.__cards])
                 
     
     def pop(self):
-        return self.cards.pop()
+        return self.__cards.pop()
         
 
     def random(self):
-        index = random.randint(0, len(self.cards))
-        card = self.cards[index]
+        index = random.randint(0, len(self.__cards))
+        card = self.__cards[index]
         return str(card)
 
     def shuffle(self, swaps=1000):
-        last_index = len(self.cards)-1
+        last_index = len(self.__cards)-1
         for _ in range(swaps):
             source_index = random.randint(0, last_index)
             dest_index = random.randint(0, last_index)
-            self.swap(self.cards, source_index, dest_index)
+            self.swap(self.__cards, source_index, dest_index)
 
     @staticmethod
     def swap(array, a, b):
@@ -79,16 +110,16 @@ class Deck:
         self.__init__()
         
     def __iter__(self):
-        return iter(self.cards)
+        return iter(self.__cards)
     
     def __getitem__(self, index):
-        return self.cards[index]
+        return self.__cards[index]
     
     def __len__(self):
-        return len(self.cards)
+        return len(self.__cards)
     
     def __bool__(self):
-        return bool(self.cards)
+        return bool(self.__cards)
         
 if __name__ == "__main__":
 
